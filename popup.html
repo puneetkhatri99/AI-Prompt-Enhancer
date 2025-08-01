@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Enhancer</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <img src="openai.svg" alt="" style="width: 40px; height: 40px;">
+    <h2>Enhanced Prompt</h2>
+    <select id="promptSelector">
+        <option value="error">Error</option>
+        <option value="research">Research</option>
+        <option value="code">Code</option>
+    </select>
+
+
+    <textarea id="promptOutput" rows="5" cols="40" placeholder="your new prompt here">
+
+    </textarea>
+
+  
+
+    <button id="getPrompt">Get Prompt</button>
+    <button id="clearPrompt">Copy Prompt</button>
+    <script type="module" src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Key Injection</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="container">
+    <img src="openai.svg" alt="OpenAI Logo" />
+    <h1>Prompt Enhancer Settings</h1>
+
+    <div class="form-group">
+      <label for="api-key">OPENAI API Key:</label>
+      <input type="text" id="api-key" placeholder="Enter your OPENAI API key" />
+      <p>
+        You can get an API key from
+        <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI API Keys</a>
+      </p>
+    </div>
+
+    <button id="save-button">Save Settings</button>
+    <p id="success-message" class="success-message">
+      Settings saved successfully!
+    </p>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

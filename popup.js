@@ -1,0 +1,85 @@
+import { getSystemPrompt } from "./prompts.js";
+
+async function generatePromptResponse() {
+  const result = document.getElementById("promptOutput");
+   result.innerText = "Generating response...";
+
+
+  const promptType = document.getElementById("promptSelector").value;
+  const selectedPrompt = getSystemPrompt(promptType);
+
+   
+  chrome.storage.sync.get(["openaiApiKey"], async (stored) => {
+    const apiKey = stored.openaiApiKey;
+
+    if (!apiKey) {
+      result.innerText = "API key not found. Please set your API key in the extension options.";
+      return;
+    }
+
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+      if (!tabs || tabs.length === 0) {
+        result.innerText = "No active tab found.";
+        return;
+      }
+
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      files: ['content.js']
+    }, () => {
+      chrome.tabs.sendMessage(tabs[0].id, { type: "GET_USER_PROMPT" }, async (response) => {
+
+         if (chrome.runtime.lastError) {
+        console.error("Message failed:", chrome.runtime.lastError.message);
+        return;
+      }
+
+        if (!response || !response.text) {
+        console.log("No prompt found");
+        return;
+      }
+
+        const userPrompt = response.text;
+
+        const res = await fetchResponse(userPrompt, selectedPrompt, apiKey);
+        result.value = res;
+    });
+  });
+});
+});
+}
+
+
+async function fetchResponse(userPrompt, selectedPrompt, apiKey) {
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey
+      },
+      body: JSON.stringify({
+        model: "gpt-4-turbo",
+        messages: [
+          { role: "system", content: selectedPrompt },
+          { role: "user", content: userPrompt }
+        ],
+        temperature: 0.5
+      })
+    });
+
+    const responseData = await response.json();
+
+    if (responseData?.choices?.length > 0) {
+      const aiReply = responseData.choices[0].message.content.trim();
+      return aiReply
+    } else {
+      return "No response from OpenAI.";
+    }
+
+  } catch (error) {
+    return`Error: ${error.message || "Failed to generate response."}`;
+  }
+}
+
+document.getElementById("getPrompt").addEventListener("click", generatePromptResponse);
