@@ -30,15 +30,10 @@ async function generatePromptResponse() {
     }, () => {
       chrome.tabs.sendMessage(tabs[0].id, { type: "GET_USER_PROMPT" }, async (response) => {
 
-         if (chrome.runtime.lastError) {
-        console.error("Message failed:", chrome.runtime.lastError.message);
-        return;
-      }
-
-        if (!response || !response.text) {
-        console.log("No prompt found");
-        return;
-      }
+      if (chrome.runtime.lastError || !response || !response.text) {
+          handleError("Could not get a prompt from the page.");
+          return;
+        }
 
         const userPrompt = response.text;
         const res = await fetchResponse(userPrompt, selectedPrompt, apiKey);
@@ -49,7 +44,6 @@ async function generatePromptResponse() {
 });
 });
 }
-
 
 async function fetchResponse(userPrompt, selectedPrompt, apiKey) {
   try {
@@ -82,6 +76,30 @@ async function fetchResponse(userPrompt, selectedPrompt, apiKey) {
     return`Error: ${error.message || "Failed to generate response."}`;
   }
 }
+
+function initializePopup() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const getPromptBtn = document.getElementById("getPrompt");
+        const copyPromptBtn = document.getElementById("copyPrompt");
+
+        if (tabs[0]?.url?.startsWith("https://chat.openai.com")) {
+            getPromptBtn.addEventListener("click", generatePromptResponse);
+            copyPromptBtn.addEventListener("click", copyPromptToPage);
+        } else {
+            handleError("This extension only works on chat.openai.com.");
+            getPromptBtn.disabled = true;
+            copyPromptBtn.disabled = true;
+        }
+    });
+}
+
+function handleError(errorMessage) {
+    document.getElementById("loader").style.display = 'none';
+    const resultEl = document.getElementById("promptOutput");
+    resultEl.value = errorMessage;
+}
+
+document.addEventListener("DOMContentLoaded", initializePopup);
 
 document.getElementById("getPrompt").addEventListener("click", generatePromptResponse);
 

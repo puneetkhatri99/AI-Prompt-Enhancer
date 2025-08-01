@@ -3,7 +3,7 @@
   "name": "Prompt Enhancer",
   "version": "1.0.0",
   "description": "Chrome extension providing AI-driven prompt enhancement.",
-  "permissions": ["storage" , "activeTab", "scripting" , "activeTab", "tabs"],
+  "permissions": ["storage" , "scripting" , "activeTab", "tabs"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"
@@ -12,7 +12,7 @@
    "content_scripts": [
     {
       "js": ["content.js"],
-      "matches": ["<all_urls>"]
+      "matches": ["https://chat.openai.com/*"]
     }
   ],
 
@@ -21,6 +21,6 @@
     },
 
     "options_page": "options.html",
-  "host_permissions": ["https://gemini.google.com/*", "https://chat.openai.com/*", "https://www.claude.com/*"]
+  "host_permissions": ["https://chat.openai.com/*"]
 
 }
