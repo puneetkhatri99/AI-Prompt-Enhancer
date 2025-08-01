@@ -4,26 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Prompt Enhancer</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <img src="openai.svg" alt="" style="width: 40px; height: 40px;">
+    <img src="openai.svg" alt="Logo">
     <h2>Enhanced Prompt</h2>
-    <select id="promptSelector">
-        <option value="error">Error</option>
-        <option value="research">Research</option>
-        <option value="code">Code</option>
-    </select>
 
+    <div class="select-wrapper">
+      <select id="promptSelector">
+          <option value="error">Fix Errors & Improve</option>
+          <option value="research">Expand & Research</option>
+          <option value="code">Optimize Code</option>
+      </select>
+    </div>
+   
+    <div id="loader" class="loader" style="display: none;"></div>
+    
+    <textarea id="promptOutput" rows="6" placeholder="Your enhanced prompt will appear here..."></textarea>
 
-    <textarea id="promptOutput" rows="5" cols="40" placeholder="your new prompt here">
-
-    </textarea>
-
-  
-
-    <button id="getPrompt">Get Prompt</button>
-    <button id="clearPrompt">Copy Prompt</button>
+    <button id="getPrompt" class="button-primary">Enhance Prompt</button>
+    <button id="copyPrompt" class="button-secondary">Copy to Page</button>
+    
     <script type="module" src="popup.js"></script>
 </body>
 </html>

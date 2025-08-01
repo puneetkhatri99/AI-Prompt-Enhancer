@@ -6,18 +6,18 @@ function getUserPrompt() {
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // Check if the message is the one we're looking for
   if (request.type === "GET_USER_PROMPT") {
-    const promptText = getUserPrompt();
-    
-    // This console.log will now run!
-    console.log("Found prompt text from page:", promptText);
-
-    // Send the extracted text back as an object, as the popup expects
-    sendResponse({ text: promptText });
+    const promptDiv = document.getElementById("prompt-textarea");
+    const text = promptDiv ? promptDiv.textContent.trim() : null;
+    sendResponse({ text: text });
+  
+  } else if (request.type === "SET_PROMPT_TEXT") {
+    const promptDiv = document.getElementById("prompt-textarea");
+    if (promptDiv) {
+      promptDiv.textContent = request.text;
+      sendResponse({ status: "Text set successfully." });
+    } else {
+      sendResponse({ status: "Error: prompt-textarea not found." });
+    }
   }
-
-  // ✅ Return true to indicate that we will send a response asynchronously.
-  // This must be inside the listener and is essential.
-  return true;
 });
