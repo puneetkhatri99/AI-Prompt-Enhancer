@@ -77,34 +77,8 @@ async function fetchResponse(userPrompt, selectedPrompt, apiKey) {
   }
 }
 
-function initializePopup() {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const getPromptBtn = document.getElementById("getPrompt");
-        const copyPromptBtn = document.getElementById("copyPrompt");
-
-        if (tabs[0]?.url?.startsWith("https://chat.openai.com")) {
-            getPromptBtn.addEventListener("click", generatePromptResponse);
-            copyPromptBtn.addEventListener("click", copyPromptToPage);
-        } else {
-            handleError("This extension only works on chat.openai.com.");
-            getPromptBtn.disabled = true;
-            copyPromptBtn.disabled = true;
-        }
-    });
-}
-
-function handleError(errorMessage) {
-    document.getElementById("loader").style.display = 'none';
-    const resultEl = document.getElementById("promptOutput");
-    resultEl.value = errorMessage;
-}
-
-document.addEventListener("DOMContentLoaded", initializePopup);
-
-document.getElementById("getPrompt").addEventListener("click", generatePromptResponse);
-
-document.getElementById("copyPrompt").addEventListener("click", () => {
-    const newPrompt = document.getElementById("promptOutput");
+function copyPromptToPage() {
+const newPrompt = document.getElementById("promptOutput");
     const textToCopy = newPrompt.value;
 
     if (!textToCopy) {
@@ -143,4 +117,34 @@ document.getElementById("copyPrompt").addEventListener("click", () => {
       });
     });
   });
+}
+
+function initializePopup() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const getPromptBtn = document.getElementById("getPrompt");
+        const copyPromptBtn = document.getElementById("copyPrompt");
+
+        if (tabs[0]?.url?.startsWith("https://chatgpt.com")) {
+            getPromptBtn.addEventListener("click", generatePromptResponse);
+            copyPromptBtn.addEventListener("click", copyPromptToPage);
+        } else {
+            handleError("This extension only works on chatgpt.com.");
+            getPromptBtn.disabled = true;
+            copyPromptBtn.disabled = true;
+        }
+    });
+}
+
+function handleError(errorMessage) {
+    document.getElementById("loader").style.display = 'none';
+    const resultEl = document.getElementById("promptOutput");
+    resultEl.value = errorMessage;
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  initializePopup();
+  document.getElementById("getPrompt").addEventListener("click", generatePromptResponse);
+  document.getElementById("copyPrompt").addEventListener("click", copyPromptToPage);
 });
